@@ -41,9 +41,17 @@ New leads and notes are marked "via Claude". Copper shows the API-key owner as t
 - Anyone with the URL can read and edit Copper with the key owner's permissions. If some people should only read, delete the write tools in a second deployment with its own secret.
 - Never put the API key or secret in the code or the repo.
 
-## Free-tier behavior
+## Keeping it awake (free tier)
 
-The server sleeps after about 15 minutes idle. The first request afterward can take up to a minute, so if Claude reports a connector error, ask again.
+Render's free instances sleep after about 15 minutes idle, and waking takes up to a minute, which can make Claude's first request time out. To prevent that, have a free uptime monitor ping the server's `/health` endpoint every 10 minutes:
+
+- **UptimeRobot** (uptimerobot.com) or **cron-job.org**, free plan
+- URL: `https://<your-service>.onrender.com/health` (never the `/mcp/<secret>` URL; keep the secret out of third-party tools)
+- Interval: 10 minutes
+
+`/health` just returns "ok" and touches no Copper data.
+
+Render's free tier includes 750 instance hours a month, enough to run one service around the clock. If you run other free Render services, they share those hours. To save hours, cron-job.org can ping on a schedule, for example weekdays 8am–7pm only.
 
 ## Local option (one person, Claude Desktop)
 

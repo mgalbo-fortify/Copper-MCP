@@ -32,6 +32,13 @@ if HOSTED:
 mcp = FastMCP("copper-crm")
 
 
+@mcp.custom_route("/health", methods=["GET", "HEAD"])
+async def health(request):
+    """Public keep-alive endpoint for uptime pingers. Reveals nothing and touches no Copper data."""
+    from starlette.responses import PlainTextResponse
+    return PlainTextResponse("ok")
+
+
 def _headers() -> dict[str, str]:
     return {
         "X-PW-AccessToken": os.environ["COPPER_API_KEY"],

@@ -4,12 +4,23 @@ A small MCP server that lets everyone on the team search and update Copper from 
 
 The server runs entirely on Render's free tier. There's no login: the connector URL contains a long secret code, and that URL works like a password.
 
-## Tools it gives Claude
+## What Claude can do
 
-Read: `search_records` (people, companies, opportunities, leads), `get_record`, `search_opportunities_by_status`, `list_pipelines`, `list_activities`
-Write: `create_lead`, `update_record`, `add_note`
+**Look things up:** search people, companies, opportunities, leads and projects by name, email, tags, owner, created/modified dates, or any other Copper filter; get full records with custom fields; see linked records and activity history; list users, pipelines and stages, custom fields, lead sources, contact types, loss reasons, activity types and tags.
 
-New leads and notes are marked "via Claude". Copper shows the API-key owner as the author.
+**Create:** people, companies, opportunities (with pipeline, stage, value, close date), leads, and projects. All support tags, owners and custom fields.
+
+**Update:** change any field (stage, owner, status, value, custom fields); add or remove tags without wiping existing ones; link records together (e.g. add a contact to a deal or a company to a campaign project); convert leads into contacts, optionally with a company and opportunity.
+
+**Deals & pipeline:** update a deal by stage or pipeline *name* (e.g. "move Acme to Proposal Sent"), mark it Won/Lost/Abandoned with a loss reason, and change value, close date, probability, owner or custom fields. The tool reports the before and after values. Get a pipeline overview showing open deals by stage, with counts and total value, for everyone or one owner. Pipelines and stages themselves can't be created or renamed through Copper's API; change those in Copper's settings.
+
+**Activities:** log notes, calls, meetings or any activity type on a record, with an optional date.
+
+**Tasks:** create tasks with due dates, times, reminders, priority, an assignee and a linked record; find tasks by owner, status, due-date range or tag (e.g. "overdue" or "due this week"); complete, reopen, reschedule, reassign or edit them.
+
+**Not included on purpose:** deleting records. Because anyone with the link can use the server, a leaked link shouldn't be able to wipe data. Deletions stay a manual step in Copper.
+
+Notes, tasks and leads created through Claude are marked "via Claude". Copper shows the API-key owner as the author.
 
 ## Setup on Render
 
@@ -29,6 +40,7 @@ New leads and notes are marked "via Claude". Copper shows the API-key owner as t
    | `MCP_SECRET` | the secret from step 3 |
    | `COPPER_API_KEY` | from step 2 |
    | `COPPER_USER_EMAIL` | email of the key's owner |
+   | `TEAM_TIMEZONE` | your time zone, e.g. `America/New_York` (so due dates and reminders land at the right time) |
 
    Don't set `PORT`; Render provides it. The server refuses to start if the secret is missing or too short.
 6. **Deploy and check the logs.** Look for "Uvicorn running" in the logs.
